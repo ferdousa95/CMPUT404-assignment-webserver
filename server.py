@@ -31,7 +31,18 @@ class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
+        string = repr(self.data)
+        #if "index.html" in string:
+        #    self.request.sendall(bytearray(string, 'utf-8'))
         print ("Got a request of: %s\n" % self.data)
+
+        response_headers = {
+        'Content-Type': 'text/html; encoding=utf8',
+        'Content-Length': len(string.encode(encoding="utf-8")),
+        'Connection': 'close',
+        }
+        response = f'HTTP/1.1\r\n{response_headers["Content-Type"]}\r\n\{response_headers["Content-Length"]}\r\n{response_headers["Connection"]}\r\n'
+        #self.request.sendall(bytearray(response, 'utf-8'))
         self.request.sendall(bytearray("OK",'utf-8'))
 
 if __name__ == "__main__":
